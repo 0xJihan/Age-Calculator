@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -40,10 +38,15 @@ class ListScreen : Tab {
     @Composable
     override fun Content() {
 
-        val roomViewModel = hiltViewModel<RoomViewmodel>()
+
+        ItemList(roomViewModel = hiltViewModel<RoomViewmodel>())
+    }
+
+    @Composable
+    private fun ItemList(
+        roomViewModel: RoomViewmodel,
+    ) {
         val list by roomViewModel.ageList.collectAsStateWithLifecycle()
-
-
 
         Column(
             Modifier
@@ -57,18 +60,27 @@ class ListScreen : Tab {
             SearchView(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp), placeholder = "Search here..."
+                    .padding(top = 15.dp, start = 10.dp, end = 10.dp),
+                placeholder = "Search here..."
             ) {
                 roomViewModel.searchAges("%$it%")
             }
 
-            if (list.isEmpty()){
-                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center){
-                    Image(
+            if (list.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(
+                        Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Image(
                         modifier = Modifier.size(300.dp),
                         painter = painterResource(R.drawable.no_data),
                         contentDescription = "No Data",
                     )
+
+                        Text(text = "No Data Found", style = MaterialTheme.typography.headlineSmall)
+                    }
                 }
             }
 

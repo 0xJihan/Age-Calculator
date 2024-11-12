@@ -1,12 +1,16 @@
-package com.jihan.jetpack_instagram_clone.component
+package com.jihan.jetpack_instagram_clone.presentation.component
 
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -22,15 +26,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.jihan.jetpack_instagram_clone.R
+import com.jihan.jetpack_instagram_clone.domain.room.AgeEntity
+import com.jihan.jetpack_instagram_clone.domain.utils.Constants.TAG
 import com.jihan.jetpack_instagram_clone.domain.utils.calculateAgeDetails
-import com.jihan.jetpack_instagram_clone.flipper.composable.FlippingView
-import com.jihan.jetpack_instagram_clone.flipper.enum.CardFace
-import com.jihan.jetpack_instagram_clone.room.AgeEntity
-import com.jihan.jetpack_instagram_clone.screens.MyText
+import com.jihan.jetpack_instagram_clone.domain.viewmodel.DetailViewmodel
+import com.jihan.jetpack_instagram_clone.domain.viewmodel.NavViewmodel
+import com.jihan.jetpack_instagram_clone.presentation.flipper.composable.FlippingView
+import com.jihan.jetpack_instagram_clone.presentation.flipper.enum.CardFace
+import com.jihan.jetpack_instagram_clone.presentation.screens.DetailScreen
+import com.jihan.jetpack_instagram_clone.presentation.screens.MyText
 import java.time.LocalDate
 
 @Composable
-fun FlipItem(ageEntity: AgeEntity,onDelete: (AgeEntity) -> Unit) {
+fun FlipItem(
+    ageEntity: AgeEntity,
+    viewmodel: NavViewmodel = hiltViewModel(),
+    detailViewmodel: DetailViewmodel = hiltViewModel(),
+    onImageUpdate: (AgeEntity) -> Unit,
+    onDelete: (AgeEntity) -> Unit,
+) {
 
 
     var cardFace by remember { mutableStateOf(CardFace.Front) }
@@ -47,7 +66,15 @@ fun FlipItem(ageEntity: AgeEntity,onDelete: (AgeEntity) -> Unit) {
             FrontPage(ageEntity){onDelete(it)}
         },
         backView = {
-            BackPage(ageEntity)
+            BackPage(ageEntity) {
+
+                detailViewmodel.setAgeEntity(ageEntity)
+
+                viewmodel.navigator.let {navigator->
+                    navigator.push(DetailScreen(detailViewmodel) { onImageUpdate(it) })
+                }
+
+            }
         },
         duration = 1000,
         cornerSize = 10.dp,
@@ -72,6 +99,13 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
             .fillMaxWidth()
             .background(Color.Transparent)
     ) {
+        val imageModel: Any? = if (ageEntity.imagePath.isNullOrEmpty()) {
+            R.drawable.person
+        } else {
+            ageEntity.imagePath
+        }
+
+
 
         ListItem(
             headlineContent = {
@@ -83,7 +117,8 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
                 Column(Modifier.fillMaxWidth()) {
                     Text("${ageEntity.description}", fontSize = 21.sp)
                     Text(
-                        "Age ${result.years} years ${result.months} months ${result.days} days" , fontSize = 18.sp
+                        "Age: ${result.years} years ${result.months} months ${result.days} days",
+                        fontSize = 18.sp
                     )
 
                 }
@@ -95,6 +130,11 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
                     Icon(imageVector = Icons.Filled.Delete,
                         contentDescription = null, tint = Color.Red)
                 }
+            }, leadingContent = {
+                Log.i(TAG, ageEntity.imagePath.toString())
+                CircularImage(
+                    model = imageModel, modifier = Modifier.size(80.dp), clickable = false
+                )
             }
 
             )
@@ -103,7 +143,7 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
 }
 
 @Composable
-fun BackPage(ageEntity: AgeEntity) {
+fun BackPage(ageEntity: AgeEntity, onDetailViewCLick: () -> Unit) {
 
     val ageDetails = calculateAgeDetails(ageEntity.start, LocalDate.now())
 
@@ -114,12 +154,17 @@ fun BackPage(ageEntity: AgeEntity) {
         MyText(
             "Age", "${ageDetails.years} years ${ageDetails.months} months ${ageDetails.days} days"
         )
+        MyText("Left", ageDetails.nextBirthdays[0].totalMonthsAndDaysLeft)
         MyText("Total Months", "${ageDetails.totalMonths} months")
         MyText("Total Weeks", "${ageDetails.totalWeeks} weeks")
         MyText("Total Days", "${ageDetails.totalDays} days")
-        MyText("Total Hours", "${ageDetails.totalHours} hours")
-        MyText("Total Minutes", "${ageDetails.totalMinutes} minutes")
-        MyText("Total Seconds", "${ageDetails.totalSeconds} seconds")
+
+        ElevatedButton(
+            onClick = onDetailViewCLick
+        ) {
+            Text("Show Details")
+        }
+
 
     }
 }

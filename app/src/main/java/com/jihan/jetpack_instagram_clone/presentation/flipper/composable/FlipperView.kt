@@ -1,4 +1,4 @@
-package com.jihan.jetpack_instagram_clone.flipper.composable
+package com.jihan.jetpack_instagram_clone.presentation.flipper.composable
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.jihan.jetpack_instagram_clone.flipper.enum.CardFace
-import com.jihan.jetpack_instagram_clone.flipper.enum.CardOrientation
+import com.jihan.jetpack_instagram_clone.presentation.flipper.enum.CardFace
+import com.jihan.jetpack_instagram_clone.presentation.flipper.enum.CardOrientation
 
 
 @Composable

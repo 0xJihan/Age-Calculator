@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.voyager.navigator)
     implementation(libs.voyager.tab.navigator)
     implementation(libs.voyager.transitions)
+    implementation(libs.room.ktx)
     // Hilt DI
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
@@ -83,6 +84,7 @@ dependencies {
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.compiler)
 
+    implementation(libs.google.gson) // for serialization and deserialization
 
 
 

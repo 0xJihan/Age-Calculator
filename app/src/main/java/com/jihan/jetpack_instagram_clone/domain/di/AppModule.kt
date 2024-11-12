@@ -1,8 +1,8 @@
-package com.jihan.jetpack_instagram_clone.di
+package com.jihan.jetpack_instagram_clone.domain.di
 
 import android.content.Context
 import androidx.room.Room
-import com.jihan.jetpack_instagram_clone.room.AppDatabase
+import com.jihan.jetpack_instagram_clone.domain.room.AppDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

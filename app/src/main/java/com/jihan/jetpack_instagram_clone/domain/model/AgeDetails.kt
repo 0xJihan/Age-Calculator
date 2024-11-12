@@ -1,4 +1,4 @@
-package com.jihan.jetpack_instagram_clone.model
+package com.jihan.jetpack_instagram_clone.domain.model
 
 import java.time.LocalDate
 

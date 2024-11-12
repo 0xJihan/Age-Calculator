@@ -1,16 +1,10 @@
-package com.jihan.jetpack_instagram_clone.screens
+package com.jihan.jetpack_instagram_clone.presentation.screens
 
 import android.app.DatePickerDialog
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,10 +34,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.jihan.jetpack_instagram_clone.component.InputDialog
+import com.jihan.jetpack_instagram_clone.domain.room.AgeEntity
 import com.jihan.jetpack_instagram_clone.domain.utils.calculateAgeDetails
-import com.jihan.jetpack_instagram_clone.room.AgeEntity
-import com.jihan.jetpack_instagram_clone.room.RoomViewmodel
+import com.jihan.jetpack_instagram_clone.domain.utils.saveImage
+import com.jihan.jetpack_instagram_clone.domain.utils.uniqueImageName
+import com.jihan.jetpack_instagram_clone.domain.viewmodel.RoomViewmodel
+import com.jihan.jetpack_instagram_clone.presentation.component.InputDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -63,7 +59,7 @@ class HomeScreen : Tab {
 
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+
 @Composable
 private fun HomeScreenContent() {
 
@@ -154,7 +150,21 @@ private fun HomeScreenContent() {
             var showInputDialog by rememberSaveable { mutableStateOf(false) }
 
             if (showInputDialog) InputDialog(context, onDismissed = { showInputDialog = false }) {
-                roomViewmodel.insertAge(AgeEntity(name = it.first, description = it.second, start = birthDate!!))
+
+                val imagePath = it.imageUri?.let { uri ->
+                    saveImage(context, uri, uniqueImageName())
+                }
+
+
+
+                roomViewmodel.insertAge(
+                    AgeEntity(
+                        name = it.name,
+                        description = it.description,
+                        start = birthDate!!,
+                        imagePath = imagePath
+                    )
+                )
                 birthDate = LocalDate.now()
                 calculateToDate = LocalDate.now()
             }
@@ -182,7 +192,7 @@ private fun HomeScreenContent() {
             ) {
                 Column {
 
-                AgeDetails(ageDetails)
+                    AgeDetails(ageDetails)
                 }
             }
 

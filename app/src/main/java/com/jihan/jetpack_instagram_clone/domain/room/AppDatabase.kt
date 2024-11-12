@@ -1,4 +1,4 @@
-package com.jihan.jetpack_instagram_clone.room
+package com.jihan.jetpack_instagram_clone.domain.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

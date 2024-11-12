@@ -1,7 +1,9 @@
-package com.jihan.jetpack_instagram_clone.room
+package com.jihan.jetpack_instagram_clone.domain.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jihan.jetpack_instagram_clone.domain.room.AgeEntity
+import com.jihan.jetpack_instagram_clone.domain.room.AppDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,33 +20,44 @@ class RoomViewmodel @Inject constructor(private val appDatabase: AppDatabase) : 
 
 
     init {
-        getAllAges()
+        observeAges()
     }
 
     fun insertAge(ageEntity: AgeEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             appDatabase.ageDao().insertAge(ageEntity)
-            getAllAges()
         }
     }
+
+
+    fun updateAge(ageEntity: AgeEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            appDatabase.ageDao().updateAge(ageEntity)
+        }
+    }
+
 
     fun deleteAge(ageEntity: AgeEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             appDatabase.ageDao().deleteAge(ageEntity)
-            getAllAges()
         }
     }
 
-    private fun getAllAges() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _ageList.value = appDatabase.ageDao().getAge()
-        }
-    }
+
 
 
     fun searchAges(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _ageList.value = appDatabase.ageDao().searchAges(query)
+        }
+    }
+
+
+    private fun observeAges() {
+        viewModelScope.launch {
+            appDatabase.ageDao().getAge().collect { ages ->
+                _ageList.value = ages
+            }
         }
     }
 

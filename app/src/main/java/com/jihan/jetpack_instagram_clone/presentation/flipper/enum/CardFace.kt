@@ -1,4 +1,4 @@
-package com.jihan.jetpack_instagram_clone.flipper.enum
+package com.jihan.jetpack_instagram_clone.presentation.flipper.enum
 
 enum class CardFace(val angel: Float) {
 

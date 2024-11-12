@@ -1,4 +1,4 @@
-package com.jihan.jetpack_instagram_clone.screens
+package com.jihan.jetpack_instagram_clone.presentation.screens
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.jihan.jetpack_instagram_clone.model.AgeDetails
+import com.jihan.jetpack_instagram_clone.domain.model.AgeDetails
 
 @Composable
 fun AgeDetails(ageDetails: AgeDetails) {

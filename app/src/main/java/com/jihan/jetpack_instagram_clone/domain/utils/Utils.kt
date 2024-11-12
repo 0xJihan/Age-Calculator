@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
-import com.jihan.jetpack_instagram_clone.model.AgeDetails
-import com.jihan.jetpack_instagram_clone.model.BirthdayDetails
+import com.jihan.jetpack_instagram_clone.domain.model.AgeDetails
+import com.jihan.jetpack_instagram_clone.domain.model.BirthdayDetails
 import java.time.LocalDate
 import java.time.Period
 import java.time.temporal.ChronoUnit

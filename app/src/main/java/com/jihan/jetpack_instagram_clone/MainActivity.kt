@@ -16,11 +16,18 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import com.jihan.jetpack_instagram_clone.domain.utils.BottomTabIcon
 import com.jihan.jetpack_instagram_clone.domain.utils.TabNavigationItem
-import com.jihan.jetpack_instagram_clone.screens.HomeScreen
-import com.jihan.jetpack_instagram_clone.screens.ListScreen
+import com.jihan.jetpack_instagram_clone.domain.viewmodel.NavViewmodel
+import com.jihan.jetpack_instagram_clone.presentation.screens.HomeScreen
+import com.jihan.jetpack_instagram_clone.presentation.screens.ListScreen
 import com.jihan.jetpack_instagram_clone.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,33 +41,44 @@ class MainActivity : ComponentActivity() {
 
 
 
+
         setContent {
             AppTheme {
-                MainApp()
+                Navigator(MainApp()) {
+
+                    SlideTransition(it)
+                }
             }
         }
 
     }
 
-    @Composable
-    private fun MainApp() {
 
-        TabNavigator(HomeScreen()) { tabNavigator ->
+    class MainApp : Screen {
+
+        @Composable
+        override fun Content() {
+            val navViewmodel: NavViewmodel = hiltViewModel()
+            navViewmodel.updateNavigator(LocalNavigator.currentOrThrow)
 
 
-            Scaffold(bottomBar = {
-                BottomAppBar(Modifier.navigationBarsPadding()) {
-                    TabNavigationItem(icon = BottomTabIcon.HOME, tab = HomeScreen())
-                    TabNavigationItem(icon = BottomTabIcon.LIST, tab = ListScreen())
-                }
-            }) {
-                Box(Modifier.padding(it)) {
-                    AnimatedContent(
-                        targetState = tabNavigator.current,
-                        transitionSpec = { fadeIn(tween(500)) togetherWith fadeOut(tween(500)) },
-                        label = ""
-                    ) { tab ->
-                        tab.Content()
+            TabNavigator(HomeScreen()) { tabNavigator ->
+
+
+                Scaffold(bottomBar = {
+                    BottomAppBar(Modifier.navigationBarsPadding()) {
+                        TabNavigationItem(icon = BottomTabIcon.HOME, tab = HomeScreen())
+                        TabNavigationItem(icon = BottomTabIcon.LIST, tab = ListScreen())
+                    }
+                }) {
+                    Box(Modifier.padding(it)) {
+                        AnimatedContent(
+                            targetState = tabNavigator.current,
+                            transitionSpec = { fadeIn(tween(500)) togetherWith fadeOut(tween(500)) },
+                            label = ""
+                        ) { tab ->
+                            tab.Content()
+                        }
                     }
                 }
             }

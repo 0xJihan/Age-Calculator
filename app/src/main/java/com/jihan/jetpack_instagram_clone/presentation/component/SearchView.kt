@@ -1,6 +1,6 @@
-package com.jihan.jetpack_instagram_clone.component
+package com.jihan.jetpack_instagram_clone.presentation.component
 
-import androidx.annotation.DrawableRes
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -88,9 +88,6 @@ fun SearchView(
 
 }
 
-sealed class SearchIcon {
-    data class Drawable(@DrawableRes val resId: Int) : SearchIcon()
-    data class Vector(val imageVector: ImageVector) : SearchIcon()
-}
+
 
 

@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -113,6 +114,12 @@ private fun HomeScreenContent() {
 
         item {
 
+            Spacer(
+                Modifier.height(
+                    100.dp
+                )
+            )
+
             Text("Developer : Jihan")
 
 
@@ -138,6 +145,8 @@ private fun HomeScreenContent() {
 
             if (showInputDialog) InputDialog(context, onDismissed = { showInputDialog = false }) {
                 roomViewmodel.insertAge(AgeEntity(name = it.first, description = it.second, start = birthDate!!))
+                birthDate = LocalDate.now()
+                calculateToDate = LocalDate.now()
             }
 
 
@@ -163,6 +172,32 @@ private fun HomeScreenContent() {
             MyText("Total Hours", "${ageDetails.totalHours} hours")
             MyText("Total Minutes", "${ageDetails.totalMinutes} minutes")
             MyText("Total Seconds", "${ageDetails.totalSeconds} seconds")
+
+            Spacer(Modifier.height(20.dp))
+            Text(
+                "Upcoming Birthdays:",
+                fontSize = 25.sp,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+
+
+            ageDetails.nextBirthdays.map { birthday ->
+
+                Text(text = birthday.year.toString(), fontSize = 30.sp,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 10.dp)
+                    )
+
+                MyText("Time Left", birthday.totalMonthsAndDaysLeft)
+                MyText("Days Left", birthday.totalDaysLeft.toString())
+                MyText("Hours Left", birthday.totalHoursLeft.toString())
+                MyText("Minutes Left", birthday.totalMinutesLeft.toString())
+                MyText("Seconds Left", birthday.totalSecondsLeft.toString())
+                Spacer(Modifier.height(50.dp))
+            }
+
 
 
         }

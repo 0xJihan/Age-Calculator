@@ -2,6 +2,15 @@ package com.jihan.jetpack_instagram_clone.screens
 
 import android.app.DatePickerDialog
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +34,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +63,7 @@ class HomeScreen : Tab {
 
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun HomeScreenContent() {
 
@@ -120,7 +129,8 @@ private fun HomeScreenContent() {
                 )
             )
 
-            Text("Developer : Jihan")
+            Text("Developer : Jihan", style = MaterialTheme.typography.titleSmall)
+
 
 
             EditableTextField(
@@ -150,6 +160,7 @@ private fun HomeScreenContent() {
             }
 
 
+
             AnimatedVisibility((ageDetails.days != 0) or (ageDetails.months != 0) or (ageDetails.years != 0)) {
                 Button(onClick = {
                     showInputDialog = true
@@ -160,44 +171,20 @@ private fun HomeScreenContent() {
 
             Spacer(Modifier.height(20.dp))
 
-            // Display the calculated age details
-            Text("Your age details:", fontSize = 25.sp, color = MaterialTheme.colorScheme.onSurface)
-            MyText(
-                "Age",
-                "${ageDetails.years} years ${ageDetails.months} months ${ageDetails.days} days"
-            )
-            MyText("Total Months", "${ageDetails.totalMonths} months")
-            MyText("Total Weeks", "${ageDetails.totalWeeks} weeks")
-            MyText("Total Days", "${ageDetails.totalDays} days")
-            MyText("Total Hours", "${ageDetails.totalHours} hours")
-            MyText("Total Minutes", "${ageDetails.totalMinutes} minutes")
-            MyText("Total Seconds", "${ageDetails.totalSeconds} seconds")
-
-            Spacer(Modifier.height(20.dp))
-            Text(
-                "Upcoming Birthdays:",
-                fontSize = 25.sp,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
-
-
-            ageDetails.nextBirthdays.map { birthday ->
-
-                Text(text = birthday.year.toString(), fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 10.dp)
+            AnimatedVisibility(
+                (ageDetails.days != 0) or (ageDetails.months != 0) or (ageDetails.years != 0),
+                enter = slideInVertically(
+                    spring(
+                        Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessVeryLow,
                     )
+                )
+            ) {
+                Column {
 
-                MyText("Time Left", birthday.totalMonthsAndDaysLeft)
-                MyText("Days Left", birthday.totalDaysLeft.toString())
-                MyText("Hours Left", birthday.totalHoursLeft.toString())
-                MyText("Minutes Left", birthday.totalMinutesLeft.toString())
-                MyText("Seconds Left", birthday.totalSecondsLeft.toString())
-                Spacer(Modifier.height(50.dp))
+                AgeDetails(ageDetails)
+                }
             }
-
 
 
         }

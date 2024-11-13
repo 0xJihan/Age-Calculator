@@ -30,11 +30,6 @@ class RoomViewmodel @Inject constructor(private val appDatabase: AppDatabase) : 
     }
 
 
-    fun updateAge(ageEntity: AgeEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            appDatabase.ageDao().updateAge(ageEntity)
-        }
-    }
 
 
     fun deleteAge(ageEntity: AgeEntity) {

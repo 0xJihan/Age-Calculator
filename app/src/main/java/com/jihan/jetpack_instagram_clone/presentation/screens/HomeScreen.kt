@@ -37,7 +37,6 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.jihan.jetpack_instagram_clone.domain.room.AgeEntity
 import com.jihan.jetpack_instagram_clone.domain.utils.calculateAgeDetails
 import com.jihan.jetpack_instagram_clone.domain.utils.saveImage
-import com.jihan.jetpack_instagram_clone.domain.utils.uniqueImageName
 import com.jihan.jetpack_instagram_clone.domain.viewmodel.RoomViewmodel
 import com.jihan.jetpack_instagram_clone.presentation.component.InputDialog
 import java.time.LocalDate
@@ -152,7 +151,7 @@ private fun HomeScreenContent() {
             if (showInputDialog) InputDialog(context, onDismissed = { showInputDialog = false }) {
 
                 val imagePath = it.imageUri?.let { uri ->
-                    saveImage(context, uri, uniqueImageName())
+                    saveImage(context, uri)
                 }
 
 

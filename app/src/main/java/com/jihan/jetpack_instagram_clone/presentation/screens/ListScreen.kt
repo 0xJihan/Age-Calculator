@@ -1,6 +1,5 @@
 package com.jihan.jetpack_instagram_clone.presentation.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,11 +23,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.jihan.jetpack_instagram_clone.R
+import com.jihan.jetpack_instagram_clone.domain.utils.deleteImage
+import com.jihan.jetpack_instagram_clone.domain.viewmodel.RoomViewmodel
 import com.jihan.jetpack_instagram_clone.presentation.component.FlipItem
 import com.jihan.jetpack_instagram_clone.presentation.component.SearchView
-import com.jihan.jetpack_instagram_clone.domain.viewmodel.RoomViewmodel
-import com.jihan.jetpack_instagram_clone.domain.utils.Constants.TAG
-import com.jihan.jetpack_instagram_clone.domain.utils.deleteImage
 
 class ListScreen : Tab {
     override val options: TabOptions
@@ -99,13 +97,11 @@ class ListScreen : Tab {
                     ) {
 
                         FlipItem(it, onImageUpdate = {
-                            roomViewModel.updateAge(it)
-                            deleteImage(it.imagePath)
-                        }) { entitiy ->
-                            roomViewModel.deleteAge(entitiy)
-                            entitiy.imagePath?.let {
-                                val isDeleted = deleteImage(it)
-                                Log.i(TAG, "ItemList: $isDeleted")
+                            roomViewModel.insertAge(it)
+                        }) { entity ->
+                            roomViewModel.deleteAge(entity)
+                            entity.imagePath?.let {
+                                deleteImage(it)
                             }
                         }
 

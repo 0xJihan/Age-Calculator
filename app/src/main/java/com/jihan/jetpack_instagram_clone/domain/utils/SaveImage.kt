@@ -7,14 +7,15 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import java.io.File
 import java.io.FileOutputStream
+import java.util.UUID
 
 
-fun saveImage(context: Context, imageUri: Uri?,newFileName:String): String? {
+fun saveImage(context: Context, imageUri: Uri?): String? {
     if (imageUri == null) return null
 
 
     val contentResolver: ContentResolver = context.contentResolver
-    val imageFile = File(context.filesDir, newFileName)
+    val imageFile = File(context.filesDir, "${UUID.randomUUID()}.jpeg")
 
     try {
         contentResolver.openInputStream(imageUri)?.use { inputStream ->
@@ -49,7 +50,4 @@ fun deleteImage(filePath: String?): Boolean {
     }
 }
 
-fun uniqueImageName(): String {
-    return "img${System.currentTimeMillis()}.jpeg"
-}
 

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewmodel @Inject constructor() :ViewModel() {
+class DetailViewmodel @Inject constructor() : ViewModel() {
 
 
     private val _imageUri = MutableStateFlow<Uri?>(null)
@@ -25,7 +25,6 @@ class DetailViewmodel @Inject constructor() :ViewModel() {
     fun setAgeEntity(ageEntity: AgeEntity) {
         _ageEntity.value = ageEntity
     }
-
 
 
 }

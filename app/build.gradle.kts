@@ -8,13 +8,13 @@ plugins {
 }
 
 android {
-    namespace = "com.jihan.jetpack_instagram_clone"
+    namespace = "com.jihan.agecalculator"
     compileSdk = 35
 
 
 
     defaultConfig {
-        applicationId = "com.jihan.jetpack_instagram_clone"
+        applicationId = "com.jihan.agecalculator"
         minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 35

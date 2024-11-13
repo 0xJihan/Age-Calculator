@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.rememberAsyncImagePainter
 import com.jihan.jetpack_instagram_clone.R
 import com.jihan.jetpack_instagram_clone.domain.model.InputResponse
 
@@ -83,7 +84,10 @@ private fun Content(
             onIconSelected(it)
         }
 
-        CircularImage(Modifier.size(100.dp), model = imageUri?: R.drawable.person) {
+        val painter = rememberAsyncImagePainter(
+            model = imageUri ?: R.drawable.person
+        )
+        CircularImage(Modifier.size(100.dp), painter ) {
             launcher.launch("image/*")
         }
 

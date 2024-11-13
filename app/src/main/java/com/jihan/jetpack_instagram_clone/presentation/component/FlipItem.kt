@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -17,10 +18,12 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.rememberAsyncImagePainter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jihan.jetpack_instagram_clone.R
@@ -99,11 +103,7 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
             .fillMaxWidth()
             .background(Color.Transparent)
     ) {
-        val imageModel: Any? = if (ageEntity.imagePath.isNullOrEmpty()) {
-            R.drawable.person
-        } else {
-            ageEntity.imagePath
-        }
+
 
 
 
@@ -132,10 +132,17 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
                 }
             }, leadingContent = {
                 Log.i(TAG, ageEntity.imagePath.toString())
+
+                if (ageEntity.imagePath.toString()=="null"){
                 CircularImage(
-                    model = imageModel, modifier = Modifier.size(80.dp), clickable = false
+                    modifier = Modifier.size(80.dp), clickable = false
+                )}
+                else{
+                    val painter = rememberAsyncImagePainter(model = ageEntity.imagePath)
+                CircularImage(
+                    painter = painter, modifier = Modifier.size(80.dp), clickable = false
                 )
-            }
+            }}
 
             )
 
@@ -147,12 +154,12 @@ fun BackPage(ageEntity: AgeEntity, onDetailViewCLick: () -> Unit) {
 
     val ageDetails = calculateAgeDetails(ageEntity.start, LocalDate.now())
 
-    Column(Modifier.fillMaxWidth()) {
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-        Text(ageEntity.name, fontSize = 25.sp, color = MaterialTheme.colorScheme.onSurface)
+        Text(ageEntity.name, fontSize = 25.sp, color = MaterialTheme.colorScheme.onSurface, modifier = Modifier.fillMaxWidth())
         MyText(
-            "Age", "${ageDetails.years} years ${ageDetails.months} months ${ageDetails.days} days"
+            "Age:", "${ageDetails.years} years ${ageDetails.months} months ${ageDetails.days} days"
         )
         MyText("Left", ageDetails.nextBirthdays[0].totalMonthsAndDaysLeft)
         MyText("Total Months", "${ageDetails.totalMonths} months")
@@ -160,7 +167,9 @@ fun BackPage(ageEntity: AgeEntity, onDetailViewCLick: () -> Unit) {
         MyText("Total Days", "${ageDetails.totalDays} days")
 
         ElevatedButton(
-            onClick = onDetailViewCLick
+            onClick = onDetailViewCLick,
+            elevation = ButtonDefaults.elevatedButtonElevation(6.dp),
+            modifier = Modifier.fillMaxWidth(.8f).padding(top = 8.dp)
         ) {
             Text("Show Details")
         }

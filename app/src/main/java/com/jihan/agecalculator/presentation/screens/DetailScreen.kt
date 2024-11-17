@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,38 +34,51 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.jihan.agecalculator.R
 import com.jihan.agecalculator.domain.room.AgeEntity
 import com.jihan.agecalculator.domain.utils.calculateAgeDetails
 import com.jihan.agecalculator.domain.utils.deleteImage
 import com.jihan.agecalculator.domain.utils.saveImage
-import com.jihan.agecalculator.domain.viewmodel.DetailViewmodel
+import com.jihan.agecalculator.domain.viewmodel.RoomViewmodel
 import com.jihan.agecalculator.presentation.component.CircularImage
 import java.time.LocalDate
 
 
-class DetailScreen(
-    private val detailViewmodel: DetailViewmodel,
-    private val onImageUpdate: (AgeEntity) -> Unit,
-) : Screen {
-    @Composable
-    override fun Content() {
-        val context = LocalContext.current
-        val ageEntity = detailViewmodel.ageEntity.value ?: return
+@Composable
+fun DetailScreen(
+    id: Int,
+    roomViewmodel: RoomViewmodel = hiltViewModel(),
+    onImageUpdate: (AgeEntity) -> Unit,
+) {
 
-        LazyColumn {
+    val context = LocalContext.current
+
+    LaunchedEffect(id) {
+        roomViewmodel.getAgeById(id)
+    }
+
+    val age by roomViewmodel.age.collectAsStateWithLifecycle()
+    val ageEntity = age ?: return
+
+
+
+
+    LazyColumn {
             item {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(brush = Brush.linearGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.primaryContainer,
-                                MaterialTheme.colorScheme.surface,
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primaryContainer,
+                                    MaterialTheme.colorScheme.surface,
+                                )
                             )
-                        ))
+                        )
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
@@ -103,7 +117,9 @@ class DetailScreen(
                     )
 
                     // Show save button if an image has been picked
-                    AnimatedButton(imageSaveAble, context, imageUriState, ageEntity) { imageSaveAble = it }
+                    AnimatedButton(imageSaveAble, context, imageUriState, ageEntity, {
+                        onImageUpdate(it)
+                    }) { imageSaveAble = it }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -118,11 +134,12 @@ class DetailScreen(
     }
 
     @Composable
-    private fun ColumnScope.AnimatedButton(
+    fun ColumnScope.AnimatedButton(
         imageSaveAble: Boolean,
         context: Context,
         imageUriState: Uri?,
         ageEntity: AgeEntity,
+        onImageUpdate: (AgeEntity) -> Unit,
         onImageSaved: (Boolean) -> Unit = {},
     ) {
         var isLoading by remember { mutableStateOf(false) }
@@ -154,5 +171,5 @@ class DetailScreen(
         }
     }
 
-}
+
 

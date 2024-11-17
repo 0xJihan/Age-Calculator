@@ -2,6 +2,7 @@ package com.jihan.agecalculator.domain.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jihan.agecalculator.domain.room.AgeDao
 import com.jihan.agecalculator.domain.room.AgeEntity
 import com.jihan.agecalculator.domain.room.AppDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,10 +13,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RoomViewmodel @Inject constructor(private val appDatabase: AppDatabase) : ViewModel() {
+class RoomViewmodel @Inject constructor(private val ageDao: AgeDao) : ViewModel() {
 
     private val _ageList = MutableStateFlow<List<AgeEntity>>(emptyList())
     val ageList = _ageList.asStateFlow()
+
+    private val _age = MutableStateFlow<AgeEntity?>(null)
+    val age = _age.asStateFlow()
 
 
 
@@ -25,7 +29,7 @@ class RoomViewmodel @Inject constructor(private val appDatabase: AppDatabase) : 
 
     fun insertAge(ageEntity: AgeEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            appDatabase.ageDao().insertAge(ageEntity)
+            ageDao.insertAge(ageEntity)
         }
     }
 
@@ -34,23 +38,28 @@ class RoomViewmodel @Inject constructor(private val appDatabase: AppDatabase) : 
 
     fun deleteAge(ageEntity: AgeEntity) {
         viewModelScope.launch(Dispatchers.IO) {
-            appDatabase.ageDao().deleteAge(ageEntity)
+            ageDao.deleteAge(ageEntity)
         }
     }
 
 
+    fun getAgeById(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _age.value = ageDao.getAgeById(id)
+        }
+    }
 
 
     fun searchAges(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _ageList.value = appDatabase.ageDao().searchAges(query)
+            _ageList.value =ageDao.searchAges(query)
         }
     }
 
 
     private fun observeAges() {
         viewModelScope.launch {
-            appDatabase.ageDao().getAge().collect { ages ->
+           ageDao.getAge().collect { ages ->
                 _ageList.value = ages
             }
         }

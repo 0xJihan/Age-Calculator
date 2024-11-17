@@ -29,23 +29,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
+import com.jihan.agecalculator.R
 import com.jihan.agecalculator.domain.room.AgeEntity
 import com.jihan.agecalculator.domain.utils.Constants.TAG
 import com.jihan.agecalculator.domain.utils.calculateAgeDetails
-import com.jihan.agecalculator.domain.viewmodel.DetailViewmodel
-import com.jihan.agecalculator.domain.viewmodel.NavViewmodel
 import com.jihan.agecalculator.presentation.flipper.composable.FlippingView
 import com.jihan.agecalculator.presentation.flipper.enum.CardFace
-import com.jihan.agecalculator.presentation.screens.DetailScreen
 import com.jihan.agecalculator.presentation.screens.MyText
 import java.time.LocalDate
 
 @Composable
 fun FlipItem(
     ageEntity: AgeEntity,
-    viewmodel: NavViewmodel = hiltViewModel(),
-    detailViewmodel: DetailViewmodel = hiltViewModel(),
-    onImageUpdate: (AgeEntity) -> Unit,
+    detailButtonClicked :(Int)->Unit,
     onDelete: (AgeEntity) -> Unit,
 ) {
 
@@ -65,13 +61,7 @@ fun FlipItem(
         },
         backView = {
             BackPage(ageEntity) {
-
-                detailViewmodel.setAgeEntity(ageEntity)
-
-                viewmodel.navigator.let { navigator ->
-                    navigator.push(DetailScreen(detailViewmodel) { onImageUpdate(it) })
-                }
-
+                detailButtonClicked(ageEntity.id!!)
             }
         },
         duration = 1000,
@@ -126,8 +116,9 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
             Log.i(TAG, ageEntity.imagePath.toString())
 
             if (ageEntity.imagePath.toString() == "null") {
+                val painter = rememberAsyncImagePainter(R.drawable.profile)
                 CircularImage(
-                    modifier = Modifier.size(80.dp), clickable = false
+                    modifier = Modifier.size(80.dp), clickable = false, painter = painter
                 )
             } else {
                 val painter = rememberAsyncImagePainter(model = ageEntity.imagePath)

@@ -24,6 +24,11 @@ object AppModule{
         ).build()
     }
 
+
+    @Singleton
+    @Provides
+    fun providesAgeDao(appDatabase: AppDatabase) = appDatabase.ageDao()
+
 }
 
 

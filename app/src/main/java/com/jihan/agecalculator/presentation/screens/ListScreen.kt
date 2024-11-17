@@ -20,97 +20,82 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.jihan.agecalculator.R
 import com.jihan.agecalculator.domain.utils.deleteImage
 import com.jihan.agecalculator.domain.viewmodel.RoomViewmodel
 import com.jihan.agecalculator.presentation.component.FlipItem
 import com.jihan.agecalculator.presentation.component.SearchView
 
-class ListScreen : Tab {
-    override val options: TabOptions
-        @Composable get() {
-            return TabOptions(
-                0u, "List", null
+
+@Composable
+fun ListScreen(
+    roomViewModel: RoomViewmodel,
+    buttonClick: (Int) -> Unit,
+) {
+    val list by roomViewModel.ageList.collectAsStateWithLifecycle()
+
+
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(
+                MaterialTheme.colorScheme.surface
             )
+    ) {
+
+
+        SearchView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 15.dp, start = 10.dp, end = 10.dp),
+            placeholder = "Search here..."
+        ) {
+            roomViewModel.searchAges("%$it%")
         }
 
-    @Composable
-    override fun Content() {
+        if (list.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(
+                    Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-
-        ItemList(roomViewModel = hiltViewModel<RoomViewmodel>())
-    }
-
-    @Composable
-    private fun ItemList(
-        roomViewModel: RoomViewmodel,
-    ) {
-        val list by roomViewModel.ageList.collectAsStateWithLifecycle()
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(
-                    MaterialTheme.colorScheme.surface
-                )
-        ) {
-
-
-            SearchView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 15.dp, start = 10.dp, end = 10.dp),
-                placeholder = "Search here..."
-            ) {
-                roomViewModel.searchAges("%$it%")
-            }
-
-            if (list.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        Image(
+                    Image(
                         modifier = Modifier.size(300.dp),
                         painter = painterResource(R.drawable.no_data),
                         contentDescription = "No Data",
                     )
 
-                        Text(text = "No Data Found", style = MaterialTheme.typography.headlineSmall)
-                    }
+                    Text(text = "No Data Found", style = MaterialTheme.typography.headlineSmall)
                 }
             }
+        }
 
 
-            LazyColumn {
+        LazyColumn {
 
 
-                items(list) {
+            items(list) {
 
-                    Box(
-                        Modifier.animateItem(
-                        )
-                    ) {
+                Box(
+                    Modifier.animateItem(
+                    )
+                ) {
 
-                        FlipItem(it, onImageUpdate = {
-                            roomViewModel.insertAge(it)
-                        }) { entity ->
-                            roomViewModel.deleteAge(entity)
-                            entity.imagePath?.let {
-                                deleteImage(it)
-                            }
+                    FlipItem(it, detailButtonClicked = {
+                        buttonClick(it)
+                    }) { entity ->
+                        roomViewModel.deleteAge(entity)
+                        entity.imagePath?.let {
+                            deleteImage(it)
                         }
-
                     }
+
                 }
-
             }
-
 
         }
+
+
     }
 }

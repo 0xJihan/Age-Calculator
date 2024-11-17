@@ -1,22 +1,6 @@
 package com.jihan.agecalculator.domain.utils
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
-import cafe.adriel.voyager.navigator.tab.Tab
 import com.jihan.agecalculator.domain.model.AgeDetails
 import com.jihan.agecalculator.domain.model.BirthdayDetails
 import java.time.LocalDate
@@ -101,39 +85,9 @@ fun calculateAgeDetails(birthDate: LocalDate, calculateToDate: LocalDate): AgeDe
 }
 
 
-@Composable
-fun RowScope.TabNavigationItem(tab: Tab, icon: BottomTabIcon) {
+data class BottomItem(
+    val label: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+)
 
-    val tabNavigator = LocalTabNavigator.current
-    val isSelected = tabNavigator.current == tab
-
-    val iconRes = if (isSelected) icon.selectedIcon else icon.unselectedIcon
-
-
-    NavigationBarItem(selected = isSelected, onClick = {
-        tabNavigator.current = tab
-    }, label = {
-        Text(tab.options.title)
-    }, icon = {
-        Icon(imageVector = iconRes, contentDescription = tab.options.title)
-    }, colors = NavigationBarItemDefaults.colors(
-        indicatorColor = MaterialTheme.colorScheme.primary,
-    ), modifier = Modifier.background(color = MaterialTheme.colorScheme.background)
-    )
-
-
-}
-
-
-enum class BottomTabIcon(val selectedIcon: ImageVector, val unselectedIcon: ImageVector) {
-    HOME(
-        selectedIcon = Icons.Filled.Home, unselectedIcon = Icons.Outlined.Home
-    ),
-
-    LIST(
-        selectedIcon = Icons.AutoMirrored.Filled.List,
-        unselectedIcon = Icons.AutoMirrored.Outlined.List
-    ),
-
-
-}

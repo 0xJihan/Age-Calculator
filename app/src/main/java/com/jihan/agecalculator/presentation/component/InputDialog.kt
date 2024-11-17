@@ -102,7 +102,7 @@ private fun Content(
                 if (it.length <= 50)
                     onNameChanged(it)
                  },
-            label = { Text("Enter Name") })
+            label = { Text("Enter Name (required)") })
         Spacer(Modifier.height(10.dp))
 
         OutlinedTextField(modifier = Modifier.fillMaxWidth(.9f),
@@ -113,7 +113,7 @@ private fun Content(
                 if (it.length <= 150)
                     onDescriptionChanged(it)
             },
-            label = { Text("Enter Description") })
+            label = { Text("Enter Description (optional)") })
 
 
     }

@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -51,7 +52,7 @@ fun ThemeSwitcher(
         .height(size)
         .clip(shape = parentShape)
         .clickable { onClick() }
-        .background(MaterialTheme.colorScheme.secondaryContainer)
+        .background(if (darkTheme) MaterialTheme.colorScheme.secondaryContainer else Color.White.copy(.5f) )
     ) {
         Box(
             modifier = Modifier

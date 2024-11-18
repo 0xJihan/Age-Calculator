@@ -12,11 +12,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jihan.agecalculator.domain.model.AgeDetails
+import com.jihan.agecalculator.domain.utils.toFormattedDate
+import java.time.LocalDate
 
 @Composable
-fun AgeDetails(ageDetails: AgeDetails) {
+fun AgeDetails(ageDetails: AgeDetails,start:LocalDate?=null) {
     // Display the calculated age details
-    Text("Your age details:", fontSize = 25.sp, color = MaterialTheme.colorScheme.onSurface)
+    Text("Your age details:", fontSize = 25.sp, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
+    start?.let {
+        Text(start.toFormattedDate(), fontSize =22.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.SemiBold)
+    }
+    Spacer(Modifier.height(15.dp))
     MyText(
         "Age",
         "${ageDetails.years} years ${ageDetails.months} months ${ageDetails.days} days"

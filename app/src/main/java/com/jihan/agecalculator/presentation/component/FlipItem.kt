@@ -2,8 +2,13 @@ package com.jihan.agecalculator.presentation.component
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -33,6 +38,7 @@ import com.jihan.agecalculator.R
 import com.jihan.agecalculator.domain.room.AgeEntity
 import com.jihan.agecalculator.domain.utils.Constants.TAG
 import com.jihan.agecalculator.domain.utils.calculateAgeDetails
+import com.jihan.agecalculator.domain.utils.toFormattedDate
 import com.jihan.agecalculator.presentation.flipper.composable.FlippingView
 import com.jihan.agecalculator.presentation.flipper.enum.CardFace
 import com.jihan.agecalculator.presentation.screens.MyText
@@ -88,7 +94,6 @@ fun FrontPage(ageEntity: AgeEntity, onDelete: (AgeEntity) -> Unit = {}) {
             .background(Color.Transparent)
     ) {
 
-
         ListItem(headlineContent = {
             Text(
                 ageEntity.name, fontSize = 25.sp, fontWeight = FontWeight.SemiBold
@@ -141,12 +146,15 @@ fun BackPage(ageEntity: AgeEntity, onDetailViewCLick: () -> Unit) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-        Text(
-            ageEntity.name,
-            fontSize = 25.sp,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.fillMaxWidth()
-        )
+
+            Text(
+                "Name: ${ageEntity.name}", fontSize = 20.sp, fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                ageEntity.start.toFormattedDate(), fontSize = 20.sp
+            )
+
+        Spacer(Modifier.height(10.dp))
         MyText(
             "Age:", "${ageDetails.years} years ${ageDetails.months} months ${ageDetails.days} days"
         )

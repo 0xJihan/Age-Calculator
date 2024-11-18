@@ -5,6 +5,7 @@ import com.jihan.agecalculator.domain.model.AgeDetails
 import com.jihan.agecalculator.domain.model.BirthdayDetails
 import java.time.LocalDate
 import java.time.Period
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 
@@ -30,11 +31,13 @@ fun calculateAgeDetails(birthDate: LocalDate, calculateToDate: LocalDate): AgeDe
     // Calculate details for the next 10 upcoming birthdays
     val nextBirthdays = mutableListOf<BirthdayDetails>()
     for (i in 1..10) {
-
-        val nextBirthday = birthDate.withYear(calculateToDate.year + i)
-        val nextBirthdayYear = calculateToDate.year + i
-        val adjustedNextBirthday =
-            if (nextBirthday.isBefore(calculateToDate)) nextBirthday.plusYears(1) else nextBirthday
+        val nextBirthdayYear =
+            if (birthDate.withYear(calculateToDate.year).isBefore(calculateToDate)) {
+                calculateToDate.year + i
+            } else {
+                calculateToDate.year + (i - 1)
+            }
+        val adjustedNextBirthday = birthDate.withYear(nextBirthdayYear)
 
         // Calculate the period until the next birthday
         val periodUntilBirthday = Period.between(calculateToDate, adjustedNextBirthday)
@@ -70,6 +73,7 @@ fun calculateAgeDetails(birthDate: LocalDate, calculateToDate: LocalDate): AgeDe
         )
     }
 
+
     return AgeDetails(
         years = years,
         months = months,
@@ -84,6 +88,10 @@ fun calculateAgeDetails(birthDate: LocalDate, calculateToDate: LocalDate): AgeDe
     )
 }
 
+fun LocalDate.toFormattedDate(): String {
+    val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy") // Format: 16 November 2000
+    return this.format(formatter)
+}
 
 data class BottomItem(
     val label: String,

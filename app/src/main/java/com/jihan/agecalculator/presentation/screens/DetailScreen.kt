@@ -66,7 +66,7 @@ fun DetailScreen(
 
 
 
-    LazyColumn {
+    LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
             item {
                 Column(
                     modifier = Modifier
@@ -123,9 +123,10 @@ fun DetailScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
+
                     // Show age details
                     val ageDetails = remember { calculateAgeDetails(ageEntity.start, LocalDate.now()) }
-                    AgeDetails(ageDetails)
+                    AgeDetails(ageDetails, start = ageEntity.start)
                 }
             }
         }

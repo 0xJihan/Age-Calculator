@@ -99,8 +99,8 @@ private fun Content(
             value = name,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             onValueChange = {
-                if (it.length <= 50)
-                    onNameChanged(it)
+                if (it.length <= 21)
+                    onNameChanged(it.trim())
                  },
             label = { Text("Enter Name (required)") })
         Spacer(Modifier.height(10.dp))
@@ -110,8 +110,8 @@ private fun Content(
             value = desc,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             onValueChange = {
-                if (it.length <= 150)
-                    onDescriptionChanged(it)
+                if (it.length <= 50)
+                    onDescriptionChanged(it.trim())
             },
             label = { Text("Enter Description (optional)") })
 

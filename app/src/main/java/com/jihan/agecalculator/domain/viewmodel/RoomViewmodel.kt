@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jihan.agecalculator.domain.room.AgeDao
 import com.jihan.agecalculator.domain.room.AgeEntity
-import com.jihan.agecalculator.domain.room.AppDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -22,6 +22,9 @@ interface AgeDao {
     @Query("SELECT * FROM age order by id desc")
      fun getAge(): Flow<List<AgeEntity>>
 
+    @Query("SELECT * FROM age order by id desc")
+     fun getAllAge(): List<AgeEntity>
+
     @Query("SELECT * FROM age WHERE name LIKE :query")
     suspend fun searchAges(query: String): List<AgeEntity>
 

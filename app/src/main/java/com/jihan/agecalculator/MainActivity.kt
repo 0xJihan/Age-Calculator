@@ -1,19 +1,24 @@
 package com.jihan.agecalculator
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.jihan.agecalculator.domain.utils.worker.scheduleBirthdayCheck
 import com.jihan.agecalculator.domain.viewmodel.RoomViewmodel
 import com.jihan.agecalculator.domain.viewmodel.ThemeViewModel
 import com.jihan.agecalculator.presentation.screens.DetailScreen
@@ -26,12 +31,15 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+        requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 0)
 
         setContent {
 
@@ -43,6 +51,7 @@ class MainActivity : ComponentActivity() {
                 MainApp(themeViewModel)
             }
         }
+        scheduleBirthdayCheck(this)
 
     }
 
@@ -77,12 +86,5 @@ class MainActivity : ComponentActivity() {
 
 
 }
-
-
-
-
-
-
-
 
 

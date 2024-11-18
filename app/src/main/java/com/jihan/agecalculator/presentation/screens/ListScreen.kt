@@ -13,18 +13,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jihan.agecalculator.R
 import com.jihan.agecalculator.domain.utils.deleteImage
 import com.jihan.agecalculator.domain.viewmodel.RoomViewmodel
 import com.jihan.agecalculator.presentation.component.FlipItem
 import com.jihan.agecalculator.presentation.component.SearchView
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -33,7 +36,15 @@ fun ListScreen(
     buttonClick: (Int) -> Unit,
 ) {
     val list by roomViewModel.ageList.collectAsStateWithLifecycle()
+    val searchQuery = remember { mutableStateOf("") } // To track search input
+    val searchQueryDebounced = remember { mutableStateOf("") } // To store the final search query after debounce
 
+    // Debouncing the search input
+    LaunchedEffect(searchQuery.value) {
+        searchQueryDebounced.value = searchQuery.value
+        delay(250)
+        roomViewModel.searchAges("%${searchQueryDebounced.value}%")
+    }
 
 
     Column(
@@ -51,7 +62,7 @@ fun ListScreen(
                 .padding(top = 15.dp, start = 10.dp, end = 10.dp),
             placeholder = "Search here..."
         ) {
-            roomViewModel.searchAges("%$it%")
+            searchQuery.value = it
         }
 
         if (list.isEmpty()) {

@@ -19,8 +19,8 @@ android {
         minSdk = 26
         //noinspection OldTargetApi
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.6.11"
 
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -85,7 +85,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
 
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 
+    implementation("androidx.hilt:hilt-work:1.2.0")
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
 

@@ -77,6 +77,7 @@ fun SearchView(
                 if (searchQuery.isNotEmpty()) {
                     IconButton(onClick = {
                         searchQuery = ""
+                        onQueryChange("")
                     }) {
                         Icon(Icons.Default.Close, contentDescription = "Clear text")
                     }
